@@ -1,17 +1,15 @@
+using Data;
 using Data.Context;
+using Data.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore;
-using Data;
-using Data.Interface;
 using Service;
 using Service.Interface;
-using Data.PopulateDB.Interface;
-using Data.PopulateDB;
 
 namespace Api
 {
@@ -30,17 +28,15 @@ namespace Api
 
             services.AddDbContext<DefaultContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddTransient<IClienteRepository, ClienteRepository>();
-            services.AddTransient<IEnderecoRepository, EnderecoRepository>();
-            services.AddTransient<IRedeSocialRepository, RedeSocialRepository>();
-            services.AddTransient<ITelefoneRepository, TelefoneRepository>();
-            services.AddTransient<IPopulateDB, PopulateDB>();
+            services.AddTransient<IContaRepository, ContaRepository>();
+            services.AddTransient<ITransacaoRepository, TransacaoRepository>();
+            services.AddTransient<ITipoTransacaoRepository, TipoTransacaoRepository>();
+           
 
-            services.AddTransient<IClienteService, ClienteService>();
-            services.AddTransient<IEnderecoService, EnderecoService>();
-            services.AddTransient<IRedeSocialService, RedeSocialService>();
-            services.AddTransient<ITelefoneService, TelefoneService>();
-            services.AddTransient<IPopulateDbService, PopulateDbService>();
+            services.AddTransient<IContaService, ContaService>();
+            services.AddTransient<ITransacaoService, TransacaoService>();
+            services.AddTransient<ITipoTransacaoService, TipoTransacaoService>();
+           
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

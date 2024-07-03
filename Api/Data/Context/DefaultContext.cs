@@ -8,12 +8,9 @@ namespace Data.Context
 
         public DefaultContext(DbContextOptions<DefaultContext> options) : base(options) { }
        
-        public DbSet<Cliente> Cliente { get; set; }
-        public DbSet<RedeSocial> RedeSocial { get; set; }
-        public DbSet<Endereco> Endereco { get; set; }
-        public DbSet<Telefone> Telefone { get; set; }
-        public DbSet<ClienteEndereco> ClienteEndereco { get; set; }
-        public DbSet<ClienteRedeSocial> ClienteRedeSocial { get; set; }
-        public DbSet<ClienteRedeSocial> ClienteTelefone { get; set; }
+        public DbSet<TipoTransacao> TipoTransacao { get; set; }
+        public DbSet<Conta> Conta { get; set; }
+        public DbSet<Transacao> Transacao { get; set; }
+
     }
 }
