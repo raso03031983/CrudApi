@@ -169,6 +169,14 @@ namespace Data
 
             _ctx.SaveChanges();
 
+            var LivrosAut = _ctx.LivroAutor.Where(x => x.LivroCod == Livro.Cod).ToList();
+            _ctx.LivroAutor.RemoveRange(LivrosAut);
+            _ctx.SaveChanges();
+
+            var LivrosAss = _ctx.LivroAssunto.Where(x => x.LivroCod == Livro.Cod).ToList();
+            _ctx.LivroAssunto.RemoveRange(LivrosAss);
+            _ctx.SaveChanges();
+
             foreach (var autorId in item.AutoresIds)
             {
                 var newAutorAssunto = new LivroAutor
