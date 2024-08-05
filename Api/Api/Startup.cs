@@ -28,15 +28,26 @@ namespace Api
 
             services.AddDbContext<DefaultContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddTransient<IContaRepository, ContaRepository>();
-            services.AddTransient<ITransacaoRepository, TransacaoRepository>();
-            services.AddTransient<ITipoTransacaoRepository, TipoTransacaoRepository>();
+            services.AddTransient<ILivroRepository, LivroRepository>();
+            services.AddTransient<IAssuntoRepository, AssuntoRepository>();
+            services.AddTransient<IAutorRepository, AutorRepository>();
            
 
-            services.AddTransient<IContaService, ContaService>();
-            services.AddTransient<ITransacaoService, TransacaoService>();
-            services.AddTransient<ITipoTransacaoService, TipoTransacaoService>();
-           
+            services.AddTransient<ILivroService, LivroService>();
+            services.AddTransient<IAssuntoService, AssuntoService>();
+            services.AddTransient<IAutorService, AutorService>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200") // Origem do frontend
+                               .AllowAnyHeader()
+                               .AllowAnyMethod()
+                               .AllowCredentials(); // Se for necessário enviar cookies
+                    });
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -58,6 +69,8 @@ namespace Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("AllowSpecificOrigin");
 
             app.UseAuthorization();
 

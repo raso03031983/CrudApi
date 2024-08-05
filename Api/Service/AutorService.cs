@@ -9,13 +9,13 @@ using System.Collections.Generic;
 
 namespace Service
 {
-    public class TipoTransacaoService : ITipoTransacaoService
+    public class AutorService : IAutorService
     {
-        private readonly ITipoTransacaoRepository _TipoTransacaoRepository;
+        private readonly IAutorRepository _AutorRepository;
 
-        public TipoTransacaoService(ITipoTransacaoRepository TipoTransacaoRepository)
+        public AutorService(IAutorRepository AutorRepository)
         {
-            _TipoTransacaoRepository = TipoTransacaoRepository;
+            _AutorRepository = AutorRepository;
         }
 
         public DefaultResponse GetByID(int itemID)
@@ -23,7 +23,7 @@ namespace Service
             var resp = new DefaultResponse();
             try
             {
-                resp.data = _TipoTransacaoRepository.GetByID(itemID); ;
+                resp.data = _AutorRepository.GetByID(itemID); ;
                 resp.success = true;
                 return resp;
             }
@@ -33,6 +33,11 @@ namespace Service
                 resp.success = false;
                 return resp;
             }
+        }
+
+        public List<AutorDto> GetAll()
+        {
+            return _AutorRepository.GetAll();
         }
 
         public DefaultResponse LoadPaginate(int pagina)
@@ -40,7 +45,7 @@ namespace Service
             var resp = new DefaultResponse();
             try
             {
-                resp.data = _TipoTransacaoRepository.LoadPaginate(pagina);
+                resp.data = _AutorRepository.LoadPaginate(pagina);
                 resp.success = true;
                 return resp;
             }
@@ -53,11 +58,11 @@ namespace Service
 
         }
 
-        public DefaultResponse Save(TipoTransacaoReq item)
+        public DefaultResponse Save(AutorReq item)
         {
             var resp = new DefaultResponse();
 
-            var validate = validacaoTipoTransacao(item);
+            var validate = validacaoAutor(item);
 
             if (validate.Count > 0)
             {
@@ -69,13 +74,13 @@ namespace Service
 
             try
             {
-                Guid newId = Guid.NewGuid();
-                var newItem = new TipoTransacaoDto
+               
+                var newItem = new AutorDto
                 {
-                    Descricao = item.Descricao
+                    Nome = item.Nome,
                 };
 
-                _TipoTransacaoRepository.Save(newItem);
+                _AutorRepository.Save(newItem);
                 resp.success = true;
                 return resp;
             }
@@ -85,20 +90,21 @@ namespace Service
                 resp.success = false;
                 return resp;
             }
+
         }
 
-        public DefaultResponse Update(TipoTransacaoReq item)
+        public DefaultResponse Update(AutorReq item)
         {
             var resp = new DefaultResponse();
 
-            var validate = validacaoTipoTransacao(item);
+            var validate = validacaoAutor(item);
 
-            var hasItem = _TipoTransacaoRepository.GetByID(item.IdTipoTransacao);
+            var hasItem = _AutorRepository.GetByID(item.Cod);
 
             if (validate.Count > 0 || hasItem == null)
             {
                 if (hasItem == null)
-                    validate.Add("Conta não encontrada");
+                    validate.Add("Autor não encontrado");
 
                 resp.message = "Erro na Validação";
                 resp.success = false;
@@ -108,9 +114,9 @@ namespace Service
 
             try
             {
-                hasItem.Descricao = item.Descricao;
+                hasItem.Nome = item.Nome;
 
-                _TipoTransacaoRepository.Update(hasItem);
+                _AutorRepository.Update(hasItem);
                 resp.success = true;
                 return resp;
             }
@@ -122,13 +128,13 @@ namespace Service
             }
         }
 
-        private List<string> validacaoTipoTransacao(TipoTransacaoReq item)
+        private List<string> validacaoAutor(AutorReq item)
         {
 
             var resp = new List<string>();
 
-            if (item.Descricao.Length > 20)
-                resp.Add("Documento não pode ter mais 15 caracteres");
+            if (item.Nome.Length > 40)
+                resp.Add("Autor não pode ter mais de 20 caracteres");
 
             return resp;
         }

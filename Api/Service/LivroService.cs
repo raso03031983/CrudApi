@@ -1,4 +1,5 @@
-﻿using Data.Dto;
+﻿using Data.Context.Model;
+using Data.Dto;
 using Data.Interface;
 using Service.Dto;
 using Service.Interface;
@@ -8,21 +9,21 @@ using System.Collections.Generic;
 
 namespace Service
 {
-    public class ContaService : IContaService
+    public class LivroService : ILivroService
     {
-        private readonly IContaRepository _ContaRepository;
+        private readonly ILivroRepository _LivroRepository;
 
-        public ContaService(IContaRepository ContaRepository)
+        public LivroService(ILivroRepository LivroRepository)
         {
-            _ContaRepository = ContaRepository;
+            _LivroRepository = LivroRepository;
         }
 
-        public DefaultResponse GetByID(Guid itemID)
+        public DefaultResponse GetByID(int itemID)
         {
             var resp = new DefaultResponse();
             try
             {
-                resp.data = _ContaRepository.GetByID(itemID); ;
+                resp.data = _LivroRepository.GetByID(itemID); ;
                 resp.success = true;
                 return resp;
             }
@@ -39,7 +40,7 @@ namespace Service
             var resp = new DefaultResponse();
             try
             {
-                resp.data = _ContaRepository.LoadPaginate(pagina);
+                resp.data = _LivroRepository.LoadPaginate(pagina);
                 resp.success = true;
                 return resp;
             }
@@ -52,11 +53,16 @@ namespace Service
 
         }
 
-        public DefaultResponse Save(ContaReq item)
+        public List<LivroDto> GetAll()
+        {
+            return _LivroRepository.GetAll();
+        }
+
+        public DefaultResponse Save(LivroReq item)
         {
             var resp = new DefaultResponse();
 
-            var validate = validacaoConta(item);
+            var validate = validacaoLivro(item);
 
             if (validate.Count > 0)
             {
@@ -68,14 +74,19 @@ namespace Service
 
             try
             {
-                Guid newId = Guid.NewGuid();
-                var newItem = new ContaDto
+                var newItem = new LivroDto
                 {
-                    documento_cliente = item.documento_cliente,
-                    IdConta = newId
+                    AnoPublicacao = item.AnoPublicacao,
+                    Titulo = item.Titulo,
+                    Editora = item.Editora,
+                    Edicao = item.Edicao,
+                    AssuntoId = item.AssuntoId,
+                    AutorId = item.AutorId,
+                    AssuntoIds = item.AssuntoIds,
+                    AutoresIds = item.AutoresIds,
                 };
 
-                _ContaRepository.Save(newItem);
+                _LivroRepository.Save(newItem);
                 resp.success = true;
                 return resp;
             }
@@ -88,18 +99,18 @@ namespace Service
 
         }
 
-        public DefaultResponse Update(ContaReq item)
+        public DefaultResponse Update(LivroReq item)
         {
             var resp = new DefaultResponse();
 
-            var validate = validacaoConta(item);
+            var validate = validacaoLivro(item);
 
-            var hasItem = _ContaRepository.GetByID(item.IdConta);
+            var hasItem = _LivroRepository.GetByID(item.Cod);
 
             if (validate.Count > 0 || hasItem == null)
             {
                 if (hasItem == null)
-                    validate.Add("Conta não encontrada");
+                    validate.Add("Livro não encontrada");
 
                 resp.message = "Erro na Validação";
                 resp.success = false;
@@ -109,9 +120,16 @@ namespace Service
 
             try
             {
-                hasItem.documento_cliente = item.documento_cliente;
+                hasItem.Titulo = item.Titulo;
+                hasItem.AnoPublicacao = item.AnoPublicacao;
+                hasItem.Edicao = item.Edicao;
+                hasItem.Editora = item.Editora;
+                hasItem.AssuntoId = item.AssuntoId;
+                hasItem.AutorId = item.AutorId;
+                hasItem.AssuntoIds = item.AssuntoIds;
+                hasItem.AutoresIds = item.AutoresIds;
 
-                _ContaRepository.Update(hasItem);
+                _LivroRepository.Update(hasItem);
                 resp.success = true;
                 return resp;
             }
@@ -123,13 +141,19 @@ namespace Service
             }
         }
 
-        private List<string> validacaoConta(ContaReq item)
+        private List<string> validacaoLivro(LivroReq item)
         {
 
             var resp = new List<string>();
 
-            if (item.documento_cliente.Length > 20)
-                resp.Add("Documento não pode ter mais 20 caracteres");
+            if (item.Titulo.Length > 40)
+                resp.Add("Titulo não pode ter mais de 40 caracteres");
+
+            if (item.Editora.Length > 40)
+                resp.Add("Editora não pode ter mais de 40 caracteres");
+
+            if (item.AnoPublicacao.Length > 4)
+                resp.Add("Ano de publicação não pode ter mais de 4 caracteres");
 
             return resp;
         }

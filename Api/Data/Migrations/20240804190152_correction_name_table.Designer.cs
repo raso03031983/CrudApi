@@ -4,14 +4,16 @@ using Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    partial class DefaultContextModelSnapshot : ModelSnapshot
+    [Migration("20240804190152_correction_name_table")]
+    partial class correction_name_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,18 +87,11 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Context.Model.LivroAssunto", b =>
                 {
-                    b.Property<int>("Cod")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<int>("AssuntoCod")
                         .HasColumnType("int");
 
                     b.Property<int>("LivroCod")
                         .HasColumnType("int");
-
-                    b.HasKey("Cod");
 
                     b.HasIndex("AssuntoCod");
 
@@ -107,11 +102,6 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Context.Model.LivroAutor", b =>
                 {
-                    b.Property<int>("Cod")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<int?>("AssuntoCod")
                         .HasColumnType("int");
 
@@ -120,8 +110,6 @@ namespace Data.Migrations
 
                     b.Property<int>("LivroCod")
                         .HasColumnType("int");
-
-                    b.HasKey("Cod");
 
                     b.HasIndex("AssuntoCod");
 

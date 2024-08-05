@@ -1,5 +1,6 @@
 ﻿using Data.Context.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Data.Context
 {
@@ -7,10 +8,17 @@ namespace Data.Context
     {
 
         public DefaultContext(DbContextOptions<DefaultContext> options) : base(options) { }
-       
-        public DbSet<TipoTransacao> TipoTransacao { get; set; }
-        public DbSet<Conta> Conta { get; set; }
-        public DbSet<Transacao> Transacao { get; set; }
+     
+        public DbSet<Livro> Livro { get; set; }
+        public DbSet<LivroAssunto> LivroAssunto { get; set; }
+        public DbSet<LivroAutor> LivroAutor { get; set; }
+        public DbSet<Assunto> Assunto { get; set; }
+        public DbSet<Autor> Autor { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+           
+        }
 
     }
 }
